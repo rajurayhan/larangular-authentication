@@ -18,7 +18,7 @@ class AuthController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('auth:api', ['except' => ['login', 'signup']]);
+        $this->middleware('auth:api', ['except' => ['login', 'signup', 'reset-password']]);
     }
 
     /**
@@ -34,7 +34,7 @@ class AuthController extends Controller
             return response()->json(['error' => 'Email or Password Doesn\'t Exist'], 401);
         }
 
-        info($token);
+        // info($token);
 
         return $this->respondWithToken($token);
     }
@@ -67,6 +67,7 @@ class AuthController extends Controller
 
         return response()->json(['message' => 'Successfully logged out']);
     }
+
 
     /**
      * Refresh a token.
