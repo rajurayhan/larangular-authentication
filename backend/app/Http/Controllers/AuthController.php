@@ -3,7 +3,11 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Http\Request;
+use Illuminate\Foundation\Auth\User as AuthUser;
 use App\Http\Controllers\Controller;
+use App\User;
+use App\Http\Requests\SignUpRequest;
 
 class AuthController extends Controller
 {
@@ -14,7 +18,7 @@ class AuthController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('auth:api', ['except' => ['login']]);
+        $this->middleware('auth:api', ['except' => ['login', 'signup']]);
     }
 
     /**
@@ -26,11 +30,20 @@ class AuthController extends Controller
     {
         $credentials = request(['email', 'password']);
 
-        if (! $token = auth()->attempt($credentials)) {
-            return response()->json(['error' => 'Email or Password Does not Exist'], 401);
+        if (! $token = auth('api')->attempt($credentials)) {
+            return response()->json(['error' => 'Email or Password Doesn\'t Exist'], 401);
         }
 
+        info($token);
+
         return $this->respondWithToken($token);
+    }
+
+    public function signup(SignUpRequest $request)
+    {
+        User::create($request->all());
+        return $this->login($request);
+        // return response()->json('Hit Received');
     }
 
     /**
@@ -77,8 +90,8 @@ class AuthController extends Controller
         return response()->json([
             'access_token' => $token,
             'token_type' => 'bearer',
-            'expires_in' => auth()->factory()->getTTL() * 60,
-            'user'       => auth()->user()->name
+            'expires_in' => auth('api')->factory()->getTTL() * 60,
+            'user'       => auth('api')->user()->name
         ]);
     }
 }
