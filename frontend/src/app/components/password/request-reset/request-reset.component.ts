@@ -25,11 +25,13 @@ export class RequestResetComponent implements OnInit {
     this.jarwis.resetRequest(this.form).subscribe(
       data => this.handleResponse(data),
       error => this.notify.error(error.error.error)
+      // error => console.log(error)
     );
   }
 
   handleResponse(data){
     // console.log(data);
+    this.notify.success(data.data);
     this.form.email = null;
   }
 

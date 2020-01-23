@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Mail;
 use App\Mail\ResetPassword;
 use DB;
 use Carbon\Carbon;
+use App\Http\Requests\ChangePasswordRequest;
 
 class ResetPasswordController extends Controller
 {
@@ -20,6 +21,42 @@ class ResetPasswordController extends Controller
 
         $this->sendResetLink($request->email);
         return $this->successResponse();
+    }
+
+    public function changePassword(ChangePasswordRequest $request)
+    {
+        $passwordResetRow = $this->getPasswordResetRow($request);
+        return $passwordResetRow->count() > 0 ? $this->processChangePassword($request) : $this->tokenInvalidResponse();
+
+    }
+
+    private function getPasswordResetRow($request){
+        return DB::table('password_resets')->where(['email' => $request->email, 'token' => $request->resetToken]);
+    }
+
+    private function tokenInvalidResponse(){
+        return response()->json([
+                'error' => 'Invalid Token or Email'
+            ],
+            Response::HTTP_UNPROCESSABLE_ENTITY
+        );
+    }
+
+    private function processChangePassword($request){
+        $userObj    = new User();
+        $user       = $userObj->where('email', $request->email)->first();
+
+        if($user){
+            $user->password     = $request->password;
+            $user->save();
+
+            $this->getPasswordResetRow($request)->delete();
+
+            return response()->json(['data' => 'Password Changed Successfully!'], Response::HTTP_OK);
+        }
+        else{
+            return response()->json(['error' => 'User not found'], Response::HTTP_NOT_FOUND);
+        }
     }
 
     public function validateEmail($email)
@@ -55,7 +92,7 @@ class ResetPasswordController extends Controller
     {
         $oldToken = DB::table('password_resets')->where('email', $email)->first();
         if($oldToken){
-            return $oldToken;
+            return $oldToken->token;
         }
         $token = str_random(60);
         $this->saveToken($token, $email);

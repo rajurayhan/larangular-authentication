@@ -21,4 +21,8 @@ export class JarwisService {
   resetRequest(data){
     return this.http.post(`${this.baseUrl}/reset-password`, data)
   }
+
+  chagnePassword(data){
+    return this.http.post(`${this.baseUrl}/reset-password-post`, data)
+  }
 }

@@ -1,1 +1,41 @@
-<p>response-reset works!</p>
+<div class="mt-4 col-8 offset-2">
+  <div class="card">
+    <div class="card-header">
+      Change Password
+    </div>
+    <div class="card-body">
+      <form #resetPasswordForm="ngForm" (ngSubmit)="onSubmit()">
+        <!-- <div class="alert alert-danger" [hidden]="!error">
+          {{ error }}
+        </div> -->
+
+        <div class="form-group row">
+          <label for="email" class="col-sm-2 col-form-label">Email</label>
+          <div class="col-sm-10">
+            <input type="email" name="email" class="form-control" placeholder="Email" id="email" [(ngModel)]="form.email" required>
+          </div>
+        </div>
+
+        <div class="form-group row">
+          <label for="password" class="col-sm-2 col-form-label">Password</label>
+          <div class="col-sm-10">
+            <input type="password" name="password" class="form-control" placeholder="Password" id="password" [(ngModel)]="form.password" required>
+          </div>
+        </div>
+        <div class="form-group row">
+          <label for="password_confirmation" class="col-sm-2 col-form-label">Confirm Password</label>
+          <div class="col-sm-10">
+            <input type="password" name="password_confirmation" class="form-control" placeholder="Confirm Password" id="password_confirmation" [(ngModel)]="form.password_confirmation" required>
+          </div>
+        </div>
+        <div class="form-group row">
+          <div class="col-sm-10 offset-2">
+            <button type="submit" class="btn btn-primary" [disabled]="!resetPasswordForm.valid">Change Password</button>
+            <a routerLink="/login" class="btn btn-info float-right">Sign In</a>
+          </div>
+        </div>
+        <small class="float-right"><a routerLink="/signup">Create New Account?</a></small>
+      </form>
+    </div>
+  </div>
+</div>
