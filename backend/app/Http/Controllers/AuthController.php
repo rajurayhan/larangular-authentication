@@ -68,6 +68,13 @@ class AuthController extends Controller
         return response()->json(['message' => 'Successfully logged out']);
     }
 
+    public function uploadAvatar(Request $request)
+    {
+        // $name = $request->name;
+
+        return response()->json($request);
+    }
+
 
     /**
      * Refresh a token.

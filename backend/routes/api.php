@@ -15,6 +15,8 @@ Route::group([
     Route::post('refresh', 'AuthController@refresh');
     Route::post('me', 'AuthController@me');
 
+    Route::post('file-upload', 'AuthController@uploadAvatar');
+
     Route::post('reset-password', 'ResetPasswordController@resetPassword');
     Route::post('reset-password-post', 'ResetPasswordController@changePassword');
 
